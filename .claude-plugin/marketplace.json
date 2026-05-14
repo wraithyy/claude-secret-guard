@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-secret-guard",
+  "description": "Prevent Claude from reading files with secrets/API keys.",
+  "owner": {
+    "name": "wraithyy",
+    "url": "https://github.com/wraithyy"
+  },
+  "plugins": [
+    {
+      "name": "secret-guard",
+      "description": "Blocks Read/Bash on .env, private keys, credentials. Whitelists .env.template/.example/.sample/.dist.",
+      "source": "./plugins/secret-guard",
+      "category": "security"
+    }
+  ]
+}

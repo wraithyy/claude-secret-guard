@@ -1,18 +1,3 @@
----
-name: secret-guard-install
-description: >
-  Installs the secret-guard PreToolUse hook for hard enforcement.
-  Use when user invokes /secret-guard-install or asks to install secret-guard hook.
-  Writes ~/.claude/hooks/block-sensitive-files.sh and configures settings.json.
----
-
-When this skill is invoked, install the secret-guard hook by performing these steps in order:
-
-## Step 1 — Write hook script
-
-Write the following content to `~/.claude/hooks/block-sensitive-files.sh` using the Write tool (expand `~` to the actual home directory path):
-
-```bash
 #!/bin/bash
 # Block reading files that likely contain secrets/API keys.
 # Whitelist: .env.template, .env.example, .env.sample, .env.dist
@@ -63,6 +48,7 @@ if [ -n "$COMMAND" ]; then
 (^|[[:space:]/])(id_rsa|id_ed25519|id_ecdsa|id_dsa)([[:space:]]|$)|\
 \.(pem|p12|pfx|jks)([[:space:]]|$)|\
 (credentials|secrets)\.(json|yaml|yml)([[:space:]]|$)'; then
+    # Allow whitelisted suffixes even in Bash commands
     if ! echo "$COMMAND" | grep -qiE '\.(template|example|sample|dist)'; then
       echo "{\"decision\":\"block\",\"reason\":\"Blocked: command targets a file that may contain secrets or API keys.\"}"
       exit 2
@@ -71,44 +57,3 @@ if [ -n "$COMMAND" ]; then
 fi
 
 exit 0
-```
-
-## Step 2 — Make executable
-
-Run: `chmod +x ~/.claude/hooks/block-sensitive-files.sh`
-
-## Step 3 — Configure settings.json
-
-Use the `update-config` skill to add two PreToolUse hook entries to `~/.claude/settings.json`.
-
-Add these entries at the beginning of the `hooks.PreToolUse` array (create it if it doesn't exist):
-
-```json
-{
-  "matcher": "Read",
-  "hooks": [
-    {
-      "type": "command",
-      "command": "~/.claude/hooks/block-sensitive-files.sh",
-      "timeout": 5
-    }
-  ]
-},
-{
-  "matcher": "Bash",
-  "hooks": [
-    {
-      "type": "command",
-      "command": "~/.claude/hooks/block-sensitive-files.sh",
-      "timeout": 5
-    }
-  ]
-}
-```
-
-Replace `~` with the actual home directory path.
-
-## Step 4 — Confirm
-
-Tell the user:
-> "secret-guard hook installed. `.env` and other secret files are now hard-blocked for Read and Bash tools. Whitelisted: `.env.template`, `.env.example`, `.env.sample`, `.env.dist`."

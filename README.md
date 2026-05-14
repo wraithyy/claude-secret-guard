@@ -6,7 +6,7 @@ Claude Code plugin that prevents Claude from reading files containing secrets an
 
 **Soft protection (always active via skill):** Claude refuses to read sensitive files based on instructions.
 
-**Hard protection (hook):** PreToolUse hook that technically blocks `Read` and `Bash` tools before they execute.
+**Hard protection (hook):** PreToolUse hook that technically blocks `Read` and `Bash` tools before they execute — activates automatically on install.
 
 ### Blocked files
 
@@ -20,19 +20,19 @@ Claude Code plugin that prevents Claude from reading files containing secrets an
 
 ## Install
 
-### 1. Add marketplace and install plugin
-
 ```bash
-claude plugin marketplace add github:wraithyy/claude-secret-guard
-claude plugin install secret-guard@secret-guard
+claude plugin marketplace add wraithyy/claude-secret-guard
+claude plugin install secret-guard@claude-secret-guard
 ```
 
-Or manually — add to `~/.claude/settings.json`:
+That's it. Both soft protection (skill) and hard enforcement (PreToolUse hook) activate automatically.
+
+### Manual install (settings.json)
 
 ```json
 {
   "extraKnownMarketplaces": {
-    "secret-guard": {
+    "claude-secret-guard": {
       "source": {
         "source": "github",
         "repo": "wraithyy/claude-secret-guard"
@@ -40,28 +40,16 @@ Or manually — add to `~/.claude/settings.json`:
     }
   },
   "enabledPlugins": {
-    "secret-guard@secret-guard": true
+    "secret-guard@claude-secret-guard": true
   }
 }
 ```
 
-### 2. Install the hook (hard enforcement)
-
-In Claude Code, run:
-
-```
-/secret-guard-install
-```
-
-This writes `~/.claude/hooks/block-sensitive-files.sh` and configures `settings.json` automatically.
-
-> **Note:** Step 1 enables the soft protection (skill-based). Step 2 adds hard enforcement via a PreToolUse hook that technically blocks the Read and Bash tools before execution. Both steps recommended.
-
 ---
 
-## Skills
+## How it works
 
-| Skill | Trigger | Purpose |
-|-------|---------|---------|
-| `secret-guard` | Auto-active | Soft protection via instructions |
-| `secret-guard-install` | `/secret-guard-install` | Installs hard enforcement hook |
+| Layer | Mechanism | Active |
+|-------|-----------|--------|
+| Soft | Skill instructs Claude to refuse reads | Always (via plugin skill) |
+| Hard | PreToolUse hook blocks Read + Bash tools at OS level | Always (via plugin.json hook) |

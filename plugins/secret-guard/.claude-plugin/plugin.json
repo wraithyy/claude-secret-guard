@@ -1,0 +1,32 @@
+{
+  "name": "secret-guard",
+  "description": "Prevent Claude from reading files that may contain secrets or API keys.",
+  "author": {
+    "name": "wraithyy",
+    "url": "https://github.com/wraithyy"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/block-sensitive-files.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/block-sensitive-files.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

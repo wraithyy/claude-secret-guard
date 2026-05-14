@@ -4,7 +4,6 @@ description: >
   Prevents Claude from reading files that may contain secrets or API keys.
   Auto-active: refuses to read .env, .env.*, private keys, credentials, and secret files.
   Whitelists: .env.template, .env.example, .env.sample, .env.dist.
-  Use /secret-guard install to set up hard enforcement via PreToolUse hook.
 ---
 
 ## Active Protection Rules
