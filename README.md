@@ -30,7 +30,7 @@ Add to `~/.claude/settings.json`:
     "secret-guard": {
       "source": {
         "source": "github",
-        "repo": "YOUR_GITHUB_USERNAME/secret-guard"
+        "repo": "wraithyy/claude-secret-guard"
       }
     }
   },
@@ -40,7 +40,7 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-Or via Claude Code UI: **Settings → Plugins → Add marketplace**.
+Or via Claude Code UI: open **Settings → Plugins**, add marketplace URL `wraithyy/claude-secret-guard`, then enable `secret-guard`.
 
 ### 2. Install the hook (hard enforcement)
 
@@ -51,6 +51,8 @@ In Claude Code, run:
 ```
 
 This writes `~/.claude/hooks/block-sensitive-files.sh` and configures `settings.json` automatically.
+
+> **Note:** Step 1 enables the soft protection (skill-based). Step 2 adds hard enforcement via a PreToolUse hook that technically blocks the Read and Bash tools before execution. Both steps recommended.
 
 ---
 
