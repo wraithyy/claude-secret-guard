@@ -20,9 +20,14 @@ Claude Code plugin that prevents Claude from reading files containing secrets an
 
 ## Install
 
-### 1. Add to Claude Code settings
+### 1. Add marketplace and install plugin
 
-Add to `~/.claude/settings.json`:
+```bash
+claude plugin marketplace add github:wraithyy/claude-secret-guard
+claude plugin install secret-guard@secret-guard
+```
+
+Or manually — add to `~/.claude/settings.json`:
 
 ```json
 {
@@ -39,8 +44,6 @@ Add to `~/.claude/settings.json`:
   }
 }
 ```
-
-Or via Claude Code UI: open **Settings → Plugins**, add marketplace URL `wraithyy/claude-secret-guard`, then enable `secret-guard`.
 
 ### 2. Install the hook (hard enforcement)
 
