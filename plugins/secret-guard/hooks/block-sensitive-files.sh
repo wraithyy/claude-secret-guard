@@ -33,7 +33,7 @@ check_path() {
   is_whitelisted "$basename" && return 0
   if is_sensitive "$basename"; then
     echo "{\"decision\":\"block\",\"reason\":\"Blocked: '$basename' may contain secrets or API keys. Access the file manually if needed.\"}"
-    exit 2
+    exit 0
   fi
 }
 
@@ -51,7 +51,7 @@ if [ -n "$COMMAND" ]; then
     # Allow whitelisted suffixes even in Bash commands
     if ! echo "$COMMAND" | grep -qiE '\.(template|example|sample|dist)'; then
       echo "{\"decision\":\"block\",\"reason\":\"Blocked: command targets a file that may contain secrets or API keys.\"}"
-      exit 2
+      exit 0
     fi
   fi
 fi

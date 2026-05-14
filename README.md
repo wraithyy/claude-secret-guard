@@ -6,7 +6,7 @@ Claude Code plugin that prevents Claude from reading files containing secrets an
 
 **Soft protection (always active via skill):** Claude refuses to read sensitive files based on instructions.
 
-**Hard protection (hook):** PreToolUse hook that technically blocks `Read` and `Bash` tools before they execute — activates automatically on install.
+**Hard protection (hook):** PreToolUse hook blocks `Read` and `Bash` tools at the OS level before execution. Registered automatically on first session after install.
 
 ### Blocked files
 
@@ -25,7 +25,7 @@ claude plugin marketplace add wraithyy/claude-secret-guard
 claude plugin install secret-guard@claude-secret-guard
 ```
 
-That's it. Both soft protection (skill) and hard enforcement (PreToolUse hook) activate automatically.
+Restart Claude Code. On the next session start, the hard-enforcement PreToolUse hook is registered automatically in `~/.claude/settings.json`.
 
 ### Manual install (settings.json)
 
@@ -52,4 +52,6 @@ That's it. Both soft protection (skill) and hard enforcement (PreToolUse hook) a
 | Layer | Mechanism | Active |
 |-------|-----------|--------|
 | Soft | Skill instructs Claude to refuse reads | Always (via plugin skill) |
-| Hard | PreToolUse hook blocks Read + Bash tools at OS level | Always (via plugin.json hook) |
+| Hard | PreToolUse hook blocks Read + Bash tools | From next session after install |
+
+The `SessionStart` hook runs `setup.sh` on each session. It detects if the PreToolUse entries are missing from `~/.claude/settings.json` and adds them (idempotent — runs once, then skips).
